@@ -1,0 +1,25 @@
+﻿services:
+  sgrbuddy.api:
+    image: sgrbuddy.api
+    build:
+      context: .
+      dockerfile: SGRBuddy.API/Dockerfile
+
+  sgrbuddy.businesslogic:
+    image: sgrbuddy.businesslogic
+    build:
+      context: .
+      dockerfile: SGRBuddy.BusinessLogic/Dockerfile
+
+  sgrbuddy.dataaccess:
+    image: sgrbuddy.dataaccess
+    build:
+      context: .
+      dockerfile: SGRBuddy.DataAccess/Dockerfile
+
+  sgrbuddy.domain:
+    image: sgrbuddy.domain
+    build:
+      context: .
+      dockerfile: SGRBuddy.Domain/Dockerfile
+
