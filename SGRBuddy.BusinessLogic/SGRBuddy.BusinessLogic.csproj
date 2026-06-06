@@ -13,4 +13,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SGRBuddy.DataAccess\SGRBuddy.DataAccess.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,3 +1,5 @@
+using SGRBuddy.Domain.Enums;
+
 namespace SGRBuddy.Domain;
 
 public class SGRSession
@@ -9,6 +11,8 @@ public class SGRSession
     public DateTime EndDate { get; set; }
     
     public ICollection<SGRItem> SGRItems { get; set; }
+    
+    public SGRSessionStatus Status { get; set; }
     
     public decimal TotalPrice { get; set; }
 }
