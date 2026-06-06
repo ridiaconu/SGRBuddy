@@ -22,5 +22,58 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository)
         return sgrItem.Id;
     }
     
+    public SGRItemDto UpdateSGRItem(Guid id, SGRItemDto sgrItemDto)
+    {
+        var sgrItem = sgrItemRepository.Get(id);
+
+        sgrItem.Brand = sgrItemDto.Brand;
+        sgrItem.Count = sgrItemDto.Count;
+
+        sgrItemRepository.SaveChanges();
+
+        return new SGRItemDto()
+        {
+            Id = sgrItem.Id,
+            Brand = sgrItem.Brand,
+            Count = sgrItem.Count
+        };
+    }
     
+    public void DeleteSGRItem(Guid id)
+    {
+        var sgrItem = sgrItemRepository.Get(id);
+
+        sgrItemRepository.Delete(sgrItem);
+        sgrItemRepository.SaveChanges();
+    }
+    
+    public SGRItemDto GetSGRItems(Guid id)
+    {
+        var sgrItem = sgrItemRepository.Get(id);
+
+        return new SGRItemDto()
+        {
+            Id = sgrItem.Id,
+            Brand = sgrItem.Brand,
+            Count = sgrItem.Count,
+            Capacity = sgrItem.Capacity,
+            IsAlcohol = sgrItem.IsAlcohol,
+            Price = sgrItem.Price
+        };
+    }
+    
+    public IEnumerable<SGRItemDto> GetAll()
+    {
+        var sgrItems = sgrItemRepository.GetAll();
+
+        return sgrItems.Select(s => new SGRItemDto()
+        {
+            Id = s.Id,
+            Brand = s.Brand,
+            Count = s.Count,
+            Capacity = s.Capacity,
+            IsAlcohol = s.IsAlcohol,
+            Price = s.Price
+        }).ToList();
+    }
 }

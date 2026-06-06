@@ -10,7 +10,7 @@ public class SGRSession
     
     public DateTime EndDate { get; set; }
     
-    public ICollection<SGRItem> SGRItems { get; set; }
+    public ICollection<SGRItem> SGRItems { get; set; } = new List<SGRItem>();
     
     public SGRSessionStatus Status { get; set; }
     

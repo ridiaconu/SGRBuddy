@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <!-- DataAccess should not reference the API project. It depends on the Domain project only. -->
       <ProjectReference Include="..\SGRBuddy.Domain\SGRBuddy.Domain.csproj" />
     </ItemGroup>
 

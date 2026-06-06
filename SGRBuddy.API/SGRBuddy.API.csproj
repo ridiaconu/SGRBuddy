@@ -8,13 +8,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8" />
+        <!-- Design package required by EF Core tools at design-time when this project is used as the startup project -->
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <!-- Swagger/OpenAPI support -->
+        <PackageReference Include="Microsoft.OpenApi" Version="1.6.22" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- API should reference BusinessLogic (and may reference Domain directly if needed) -->
+      <ProjectReference Include="..\SGRBuddy.BusinessLogic\SGRBuddy.BusinessLogic.csproj" />
+      <ProjectReference Include="..\SGRBuddy.Domain\SGRBuddy.Domain.csproj" />
     </ItemGroup>
 
 </Project>
