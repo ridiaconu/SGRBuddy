@@ -6,7 +6,7 @@ namespace SGRBuddy.BusinessLogic;
 
 public class SGRItemService(ISGRItemRepository sgrItemRepository)
 {
-    public Guid CreateItem(SGRItemDto sgrItemDto)
+    public Guid CreateItem(SGRItemBaseDto sgrItemDto)
     {
         var sgrItem = new SGRItem
         {
@@ -75,5 +75,22 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository)
             IsAlcohol = s.IsAlcohol,
             Price = s.Price
         }).ToList();
+    }
+
+    public SGRItemDto UpdateCount(Guid id)
+    {
+        var sgrItem = sgrItemRepository.Get(id);
+
+        sgrItem.Count += 1;
+        sgrItemRepository.SaveChanges();
+        return new SGRItemDto()
+        {
+            Id = sgrItem.Id,
+            Brand = sgrItem.Brand,
+            Count = sgrItem.Count,
+            Capacity = sgrItem.Capacity,
+            IsAlcohol = sgrItem.IsAlcohol,
+            Price = sgrItem.Price
+        };
     }
 }

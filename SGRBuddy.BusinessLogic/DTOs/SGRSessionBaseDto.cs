@@ -1,18 +1,11 @@
 using SGRBuddy.Domain.Enums;
 
-namespace SGRBuddy.Domain;
+namespace SGRBuddy.BusinessLogic.DTOs;
 
-public class SGRSession
+public class SGRSessionBaseDto
 {
-    public Guid Id { get; set; }
-    
     public DateTime StartDate { get; set; }
-    
     public DateTime? EndDate { get; set; }
-    
-    public ICollection<SGRItem> SGRItems { get; set; } = new List<SGRItem>();
-    
     public SGRSessionStatus Status { get; set; }
-    
     public decimal TotalPrice { get; set; }
 }

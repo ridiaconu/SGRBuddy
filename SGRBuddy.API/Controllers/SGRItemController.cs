@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SGRBuddy.BusinessLogic;
 using SGRBuddy.BusinessLogic.DTOs;
+using SGRBuddy.Domain;
 
 namespace SGRBuddy.API.Controllers;
 
@@ -12,7 +13,7 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
     /// Create a new SGR item
     /// </summary>
     [HttpPost]
-    public IActionResult CreateItem([FromBody] SGRItemDto dto)
+    public IActionResult CreateItem([FromBody] SGRItemBaseDto dto)
     {
         if (dto == null)
         {
@@ -87,6 +88,25 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating item: {ex.Message}");
+        }
+    }
+
+    [HttpPut("{id}/update-count")]
+    public IActionResult UpdateItemCount(Guid id)
+    {
+        if (id == null)
+        {
+            return BadRequest("Item ID is required");
+        }
+
+        try
+        {
+            var updatedCount = sgrItemService.UpdateCount(id);
+            return Ok(new { id, count = updatedCount });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating item count: {ex.Message}");
         }
     }
 

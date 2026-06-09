@@ -7,6 +7,7 @@ public static class DependencyInjection
     public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
     {
         services.AddScoped<SGRItemService>();
+        services.AddScoped<SGRSessionService>();
 
         return services;
     }
