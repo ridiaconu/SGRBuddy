@@ -10,4 +10,18 @@ internal class SGRSessionRepository (SGRContext sgrContext) : BaseRepository<SGR
     {
         return CurrentSet.Where(item => item.Status==SGRSessionStatus.Ongoing).ToList();
     }
+
+    public void RemoveSGRItem(Guid id)
+    {
+        var session = CurrentSet.FirstOrDefault(s => s.SGRItems.Any(i => i.Id == id));
+        if (session != null)
+        {
+            var itemToRemove = session.SGRItems.FirstOrDefault(i => i.Id == id);
+            if (itemToRemove != null)
+            {
+                session.SGRItems.Remove(itemToRemove);
+                SaveChanges();
+            }
+        }
+    }
 }

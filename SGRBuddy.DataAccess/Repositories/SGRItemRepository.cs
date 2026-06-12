@@ -11,4 +11,11 @@ internal class SGRItemRepository(SGRContext sgrContext) : BaseRepository<SGRItem
     {
         return CurrentSet.Where(item => item.IsAlcohol == true).ToList();
     }
+
+    public SGRItem GetSGRItemByBarcode(string barcode)
+    {
+        return CurrentSet.FirstOrDefault(item => item.Barcode == barcode);
+    }
+    
+
 }

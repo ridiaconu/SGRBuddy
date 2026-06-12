@@ -61,6 +61,20 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository)
             Price = sgrItem.Price
         };
     }
+
+    public SGRItemDto GetSGRItemByBarcode(string barcode)
+    {
+        var sgrItem=sgrItemRepository.GetSGRItemByBarcode(barcode);
+        return new SGRItemDto()
+        {
+            Id = sgrItem.Id,
+            Brand = sgrItem.Brand,
+            Count = sgrItem.Count,
+            Capacity = sgrItem.Capacity,
+            IsAlcohol = sgrItem.IsAlcohol,
+            Price = sgrItem.Price
+        };
+    }
     
     public IEnumerable<SGRItemDto> GetAll()
     {

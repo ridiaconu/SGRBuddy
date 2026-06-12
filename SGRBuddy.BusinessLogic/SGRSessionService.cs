@@ -5,13 +5,13 @@ using SGRBuddy.Domain.Enums;
 
 namespace SGRBuddy.BusinessLogic;
 
-public class SGRSessionService (ISGRSessionRepository sgrSessionRepository)
+public class SGRSessionService (ISGRSessionRepository sgrSessionRepository, ISGRItemRepository sgrItemRepository)
 {
     public SGRSessionDto CreateSession(SGRSessionBaseDto sgrSessionBaseDto)
     {
         var sgrSession = new SGRSession
         {
-            StartDate = sgrSessionBaseDto.StartDate,
+            StartDate = DateTime.Now,
             EndDate = null,
             Status = SGRSessionStatus.Ongoing,
             TotalPrice = 0
@@ -27,5 +27,49 @@ public class SGRSessionService (ISGRSessionRepository sgrSessionRepository)
             Status = sgrSession.Status,
             TotalPrice = sgrSession.TotalPrice
         };
+    }
+
+    public void EndSession(Guid sessionId)
+    {
+        var session = sgrSessionRepository.Get(sessionId);
+        if (session!=null)
+        {
+            session.EndDate = DateTime.Now;
+            sgrSessionRepository.SaveChanges();
+        }
+        else
+        {
+            throw new Exception("Session not found");
+        }
+
+    }
+    
+    public void AddItemToSession(Guid sessionId, string barcode)
+    {
+        var session = sgrSessionRepository.Get(sessionId);
+        if (session == null)
+        {
+            throw new Exception("Session not found");
+        }
+        
+        var sgrItem = sgrItemRepository.GetSGRItemByBarcode(barcode);
+        
+        session.SGRItems.Add(sgrItem);
+        session.TotalPrice += (decimal)(sgrItem.Price * sgrItem.Count);
+        
+        sgrSessionRepository.SaveChanges();
+    }
+
+    public void RemoveItemFromSession(Guid sessionId, string barcode)
+    {
+        var session = sgrSessionRepository.Get(sessionId);
+        if (session == null)
+        {
+            throw new Exception("Session not found");
+        }
+        var sgrItem = sgrItemRepository.GetSGRItemByBarcode(barcode);
+        session.SGRItems.Remove(sgrItem);
+        sgrSessionRepository.SaveChanges();
+        
     }
 }
