@@ -1,25 +1,52 @@
-﻿services:
-  sgrbuddy.api:
-    image: sgrbuddy.api
+version: '3.9'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sgrbuddy-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourSecurePassword123!"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - sgrbuddy-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourSecurePassword123!", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ASP.NET Core API
+  sgrbuddy-api:
+    container_name: sgrbuddy-api
     build:
       context: .
       dockerfile: SGRBuddy.API/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    image: sgrbuddy-api:latest
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=SGRBuddy;User Id=sa;Password=YourSecurePassword123!;TrustServerCertificate=true;"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - sgrbuddy-network
+    restart: unless-stopped
 
-  sgrbuddy.businesslogic:
-    image: sgrbuddy.businesslogic
-    build:
-      context: .
-      dockerfile: SGRBuddy.BusinessLogic/Dockerfile
+volumes:
+  sqlserver-data:
+    driver: local
 
-  sgrbuddy.dataaccess:
-    image: sgrbuddy.dataaccess
-    build:
-      context: .
-      dockerfile: SGRBuddy.DataAccess/Dockerfile
-
-  sgrbuddy.domain:
-    image: sgrbuddy.domain
-    build:
-      context: .
-      dockerfile: SGRBuddy.Domain/Dockerfile
-
+networks:
+  sgrbuddy-network:
+    driver: bridge
