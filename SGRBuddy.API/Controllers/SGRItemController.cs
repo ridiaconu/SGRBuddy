@@ -13,7 +13,7 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
     /// Create a new SGR item
     /// </summary>
     [HttpPost]
-    public IActionResult CreateItem([FromBody] SGRItemBaseDto dto)
+    public IActionResult CreateItem([FromBody] SGRItemDto dto)
     {
         if (dto == null)
         {
@@ -35,14 +35,14 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
     /// Get a single SGR item by ID
     /// </summary>
     [HttpGet("{id}")]
-    public IActionResult GetItem(Guid id)
+    public IActionResult GetItem(Guid Id)
     {
         try
         {
-            var item = sgrItemService.GetSGRItems(id);
+            var item = sgrItemService.Get(Id);
             if (item == null)
             {
-                return NotFound($"Item with ID {id} not found");
+                return NotFound($"Item with Id {Id} not found");
             }
             return Ok(item);
         }
@@ -73,7 +73,7 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
     /// Update an existing SGR item
     /// </summary>
     [HttpPut("{id}")]
-    public IActionResult UpdateItem(Guid id, [FromBody] SGRItemDto dto)
+    public IActionResult UpdateItem(Guid Id, [FromBody] SGRItemDto dto)
     {
         if (dto == null)
         {
@@ -82,7 +82,7 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
 
         try
         {
-            var updatedItem = sgrItemService.UpdateSGRItem(id, dto);
+            var updatedItem = sgrItemService.UpdateSGRItem(Id, dto);
             return Ok(updatedItem);
         }
         catch (Exception ex)
@@ -90,35 +90,17 @@ public class SGRItemController(SGRItemService sgrItemService) : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating item: {ex.Message}");
         }
     }
-
-    [HttpPut("{id}/update-count")]
-    public IActionResult UpdateItemCount(Guid id)
-    {
-        if (id == null)
-        {
-            return BadRequest("Item ID is required");
-        }
-
-        try
-        {
-            var updatedCount = sgrItemService.UpdateCount(id);
-            return Ok(new { id, count = updatedCount });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating item count: {ex.Message}");
-        }
-    }
+    
 
     /// <summary>
     /// Delete an SGR item
     /// </summary>
     [HttpDelete("{id}")]
-    public IActionResult DeleteItem(Guid id)
+    public IActionResult DeleteItem(Guid Id)
     {
         try
         {
-            sgrItemService.DeleteSGRItem(id);
+            sgrItemService.DeleteSGRItem(Id);
             return NoContent();
         }
         catch (Exception ex)

@@ -4,5 +4,5 @@ public enum SGRSessionStatus
 {
     Ongoing = 1,
     Finished = 2,
-    Abandoned = 3
+    Cancelled =3
 }

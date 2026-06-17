@@ -6,5 +6,6 @@ public interface ISGRSessionRepository : IRepository<SGRSession>
 {
     public IEnumerable<SGRSession> GetOngoingSessions();
     
-    public void RemoveSGRItem(Guid id);
+    public IEnumerable<SGRSession> GetOngoingSessionsWithItems();
+    
 }

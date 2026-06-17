@@ -1,78 +1,68 @@
 using SGRBuddy.BusinessLogic.DTOs;
 using SGRBuddy.DataAccess.Repositories.Abstractions;
 using SGRBuddy.Domain;
+using SGRBuddy.Domain.Enums;
 
 namespace SGRBuddy.BusinessLogic;
 
 public class SGRItemService(ISGRItemRepository sgrItemRepository)
 {
-    public Guid CreateItem(SGRItemBaseDto sgrItemDto)
+    public string CreateItem(SGRItemDto sgrItemDto)
     {
         var sgrItem = new SGRItem
         {
             Barcode = sgrItemDto.Barcode,
+            SessionId = sgrItemDto.SessionId,
             Brand = sgrItemDto.Brand,
-            IsAlcohol = sgrItemDto.IsAlcohol,
-            Price = 0.5,
-            Count = 1,
-            Capacity = sgrItemDto.Capacity
+            Type = sgrItemDto.Type,
+            Capacity = sgrItemDto.Capacity,
+            IsAlcohol = sgrItemDto.IsAlcohol
+
         };
         sgrItemRepository.Add(sgrItem);
         sgrItemRepository.SaveChanges();
-        return sgrItem.Id;
+        return sgrItem.Barcode;
     }
     
-    public SGRItemDto UpdateSGRItem(Guid id, SGRItemDto sgrItemDto)
+    public SGRItemDto UpdateSGRItem(Guid Id, SGRItemDto sgrItemDto)
     {
-        var sgrItem = sgrItemRepository.Get(id);
+        var sgrItem = sgrItemRepository.Get(Id);
 
         sgrItem.Brand = sgrItemDto.Brand;
-        sgrItem.Count = sgrItemDto.Count;
-
+        sgrItem.Type = sgrItemDto.Type;
+        sgrItem.Capacity = sgrItemDto.Capacity;
+        sgrItem.IsAlcohol = sgrItemDto.IsAlcohol;
         sgrItemRepository.SaveChanges();
 
         return new SGRItemDto()
         {
-            Id = sgrItem.Id,
+            Barcode = sgrItem.Barcode,
             Brand = sgrItem.Brand,
-            Count = sgrItem.Count
+            Capacity = sgrItem.Capacity,
+            IsAlcohol = sgrItem.IsAlcohol,
+            Type = sgrItem.Type
         };
     }
     
-    public void DeleteSGRItem(Guid id)
+    public void DeleteSGRItem(Guid  Id)
     {
-        var sgrItem = sgrItemRepository.Get(id);
+        var sgrItem = sgrItemRepository.Get(Id);
 
         sgrItemRepository.Delete(sgrItem);
         sgrItemRepository.SaveChanges();
     }
-    
-    public SGRItemDto GetSGRItems(Guid id)
-    {
-        var sgrItem = sgrItemRepository.Get(id);
 
-        return new SGRItemDto()
-        {
-            Id = sgrItem.Id,
-            Brand = sgrItem.Brand,
-            Count = sgrItem.Count,
-            Capacity = sgrItem.Capacity,
-            IsAlcohol = sgrItem.IsAlcohol,
-            Price = sgrItem.Price
-        };
-    }
-
-    public SGRItemDto GetSGRItemByBarcode(string barcode)
+    public SGRItemDto Get(Guid Id)
     {
-        var sgrItem=sgrItemRepository.GetSGRItemByBarcode(barcode);
-        return new SGRItemDto()
+        var sgrItem = sgrItemRepository.Get(Id);
+        return new SGRItemDto
         {
-            Id = sgrItem.Id,
+            SessionId = sgrItem.SessionId,
+            Barcode = sgrItem.Barcode,
             Brand = sgrItem.Brand,
-            Count = sgrItem.Count,
+            Type = sgrItem.Type,
             Capacity = sgrItem.Capacity,
-            IsAlcohol = sgrItem.IsAlcohol,
-            Price = sgrItem.Price
+            IsAlcohol = sgrItem.IsAlcohol
         };
     }
     
@@ -82,29 +72,10 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository)
 
         return sgrItems.Select(s => new SGRItemDto()
         {
-            Id = s.Id,
+            Barcode = s.Barcode,
             Brand = s.Brand,
-            Count = s.Count,
             Capacity = s.Capacity,
             IsAlcohol = s.IsAlcohol,
-            Price = s.Price
         }).ToList();
-    }
-
-    public SGRItemDto UpdateCount(Guid id)
-    {
-        var sgrItem = sgrItemRepository.Get(id);
-
-        sgrItem.Count += 1;
-        sgrItemRepository.SaveChanges();
-        return new SGRItemDto()
-        {
-            Id = sgrItem.Id,
-            Brand = sgrItem.Brand,
-            Count = sgrItem.Count,
-            Capacity = sgrItem.Capacity,
-            IsAlcohol = sgrItem.IsAlcohol,
-            Price = sgrItem.Price
-        };
     }
 }

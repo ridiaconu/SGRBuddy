@@ -5,6 +5,7 @@ namespace SGRBuddy.DataAccess.Repositories.Abstractions;
 public interface ISGRItemRepository : IRepository<SGRItem>
 {
     public IEnumerable<SGRItem> GetAlcohol();
-
-    public SGRItem GetSGRItemByBarcode(string barcode);
+    public IEnumerable<SGRItem> GetBySession(Guid sessionId);
+    
+    public IEnumerable<SGRItem> GetByBarcode(string  barcode);
 }
