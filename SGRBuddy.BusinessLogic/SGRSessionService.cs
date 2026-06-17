@@ -91,4 +91,31 @@ public class SGRSessionService (ISGRSessionRepository sgrSessionRepository, ISGR
     sgrSessionRepository.SaveChanges();
         
     }
+
+    public SGRSessionDto Get(Guid sessionId)
+    {
+        var session = sgrSessionRepository.Get(sessionId);
+        return new SGRSessionDto
+        {
+            StartDate = session.StartDate,
+            EndDate = session.EndDate,
+            Status = session.Status,
+            TotalItems = session.TotalItems,
+            TotalPrice = session.TotalPrice
+        };
+    }
+    
+    public IEnumerable<SGRSessionDto> GetAll()
+    {
+        var sgrSessions = sgrSessionRepository.GetAll();
+
+        return sgrSessions.Select(s => new SGRSessionDto()
+        {
+            StartDate = s.StartDate,
+            EndDate = s.EndDate,
+            Status = s.Status,
+            TotalItems = s.TotalItems,
+            TotalPrice = s.TotalPrice
+        }).ToList();
+    }
 }
