@@ -83,7 +83,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
         }
     }
 
-    [HttpPost]
+    [HttpPost("add-item")]
     public IActionResult AddToSession([FromBody] Guid sessionId, Guid itemId)
     {
         try

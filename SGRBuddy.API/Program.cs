@@ -16,14 +16,15 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SGRBuddy API V1");
     c.EnableTryItOutByDefault();
     c.RoutePrefix = string.Empty;  // Set Swagger as root path
 });
+app.UseAuthorization();
 
 app.MapControllers();
 
