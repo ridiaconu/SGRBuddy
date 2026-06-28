@@ -13,17 +13,12 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
     /// Create a new SGR session
     /// </summary>
     [HttpPost]
-    public IActionResult CreateSession([FromBody] SGRSessionDto dto)
+    public IActionResult CreateSession()
     {
-        if (dto == null)
-        {
-            return BadRequest("Session data is required");
-        }
-
         try
         {
-            var sessionId = sgrSessionService.CreateSession(dto);
-            return CreatedAtAction(nameof(GetSession), new { id = sessionId }, new { id = sessionId });
+            var sessionId = sgrSessionService.CreateSession();
+            return Ok(sessionId);
         }
         catch (Exception ex)
         {
@@ -34,7 +29,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
     /// <summary>
     /// Get a single SGR session by ID
     /// </summary>
-    [HttpGet("{id}")]
+    [HttpGet("{Id}")]
     public IActionResult GetSession(Guid Id)
     {
         try
@@ -70,7 +65,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
     }
 
     [HttpPut("{id}")]
-    public IActionResult EndSession([FromBody] Guid id)
+    public IActionResult EndSession(Guid id)
     {
         try
         {
@@ -83,12 +78,12 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
         }
     }
 
-    [HttpPost("add-item")]
+    [HttpPost("remove-item")]
     public IActionResult AddToSession([FromBody] Guid sessionId, Guid itemId)
     {
         try
         {
-            sgrSessionService.AddItemToSession(sessionId, itemId);
+            sgrSessionService.RemoveItemFromSession(sessionId, itemId);
             return Ok();
         }
         catch (Exception ex)

@@ -8,27 +8,20 @@ namespace SGRBuddy.BusinessLogic;
 
 public class SGRSessionService (ISGRSessionRepository sgrSessionRepository, ISGRItemRepository sgrItemRepository)
 {
-    public SGRSessionDto CreateSession(SGRSessionDto sgrSessionDto)
+    public Guid CreateSession()
     {
         var sgrSession = new SGRSession
         {
+            Id = new Guid(),
             StartDate = DateTime.Now,
-            EndDate = null,
             Status = SGRSessionStatus.Ongoing,
             TotalItems = 0,
             TotalPrice = 0
         };
         sgrSessionRepository.Add(sgrSession);
         sgrSessionRepository.SaveChanges();
-        
-        return new SGRSessionDto()
-        {
-            StartDate = sgrSession.StartDate,
-            EndDate = sgrSession.EndDate,
-            Status = sgrSession.Status, 
-            TotalItems = sgrSession.TotalItems,
-            TotalPrice = sgrSession.TotalPrice
-        };
+
+        return sgrSession.Id;
     }
 
     public void EndSession(Guid sessionId)
@@ -45,23 +38,6 @@ public class SGRSessionService (ISGRSessionRepository sgrSessionRepository, ISGR
             throw new Exception("Session not found");
         }
 
-    }
-    
-    public void AddItemToSession(Guid sessionId, Guid itemId)
-    {
-        var session = sgrSessionRepository.Get(sessionId);
-        if (session == null)
-        {
-            throw new Exception("Session not found");
-        }
-        
-        var sgrItem = sgrItemRepository.Get(itemId);
-
-        sgrItem.SessionId = session.Id;
-        session.TotalItems++;
-        session.TotalPrice = (decimal)(session.TotalItems * 0.5);
-        
-        sgrSessionRepository.SaveChanges();
     }
 
     public void RemoveItemFromSession(Guid sessionId, Guid itemId)
@@ -97,6 +73,7 @@ public class SGRSessionService (ISGRSessionRepository sgrSessionRepository, ISGR
         var session = sgrSessionRepository.Get(sessionId);
         return new SGRSessionDto
         {
+            Id = session.Id,
             StartDate = session.StartDate,
             EndDate = session.EndDate,
             Status = session.Status,
@@ -111,6 +88,7 @@ public class SGRSessionService (ISGRSessionRepository sgrSessionRepository, ISGR
 
         return sgrSessions.Select(s => new SGRSessionDto()
         {
+            Id = s.Id,
             StartDate = s.StartDate,
             EndDate = s.EndDate,
             Status = s.Status,

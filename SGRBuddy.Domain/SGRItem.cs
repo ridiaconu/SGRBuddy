@@ -5,7 +5,7 @@ namespace SGRBuddy.Domain;
 
 public class SGRItem
 {
-    public Guid Id { get; set; } =  Guid.NewGuid();
+    public Guid Id { get; set; }
     public required string Barcode  { get; set; }
     
     [Column("SGRSessionId")]
@@ -15,7 +15,7 @@ public class SGRItem
     public SGRItemType Type { get; set; }
     public decimal Capacity { get; set; }
     
-    public DateTime ScannedAt { get; set; } = DateTime.Now;
+    public DateTime ScannedAt { get; set; }
     public bool IsAlcohol { get; set; }
     
     // Navigation property

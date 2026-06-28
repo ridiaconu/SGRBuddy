@@ -5,12 +5,13 @@ using SGRBuddy.Domain.Enums;
 
 namespace SGRBuddy.BusinessLogic;
 
-public class SGRItemService(ISGRItemRepository sgrItemRepository)
+public class SGRItemService(ISGRItemRepository sgrItemRepository, ISGRSessionRepository sgrSessionRepository)
 {
-    public string CreateItem(SGRItemDto sgrItemDto)
+    public Guid CreateItem(SGRItemDto sgrItemDto)
     {
         var sgrItem = new SGRItem
         {
+            Id = new Guid(),
             Barcode = sgrItemDto.Barcode,
             SessionId = sgrItemDto.SessionId,
             Brand = sgrItemDto.Brand,
@@ -19,9 +20,11 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository)
             IsAlcohol = sgrItemDto.IsAlcohol
 
         };
+        
         sgrItemRepository.Add(sgrItem);
         sgrItemRepository.SaveChanges();
-        return sgrItem.Barcode;
+        AddItemToSession(sgrItem.SessionId, sgrItem.Id);
+        return sgrItem.Id;
     }
     
     public SGRItemDto UpdateSGRItem(Guid Id, SGRItemDto sgrItemDto)
@@ -72,11 +75,30 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository)
 
         return sgrItems.Select(s => new SGRItemDto()
         {
+            
+            SessionId = s.SessionId,
             Barcode = s.Barcode,
             Brand = s.Brand,
             Capacity = s.Capacity,
             IsAlcohol = s.IsAlcohol,
         }).ToList();
+    }
+    
+    public void AddItemToSession(Guid sessionId, Guid itemId)
+    {
+        var session = sgrSessionRepository.Get(sessionId);
+        if (session == null)
+        {
+            throw new Exception("Session not found");
+        }
+        
+        var sgrItem = sgrItemRepository.Get(itemId);
+
+        sgrItem.SessionId = session.Id;
+        session.TotalItems++;
+        session.TotalPrice = (decimal)(session.TotalItems * 0.5);
+        
+        sgrSessionRepository.SaveChanges();
     }
     
 }

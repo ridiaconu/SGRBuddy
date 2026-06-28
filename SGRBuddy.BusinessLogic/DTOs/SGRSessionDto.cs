@@ -2,7 +2,7 @@ using SGRBuddy.Domain.Enums;
 
 namespace SGRBuddy.BusinessLogic.DTOs;
 
-public class SGRSessionDto
+public class SGRSessionDto : SGRSessionBaseDto
 {
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; }
