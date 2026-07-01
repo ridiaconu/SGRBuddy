@@ -51,8 +51,7 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository, ISGRSessionRep
     {
         var sgrItem = sgrItemRepository.Get(Id);
 
-        sgrItemRepository.Delete(sgrItem);
-        sgrItemRepository.SaveChanges();
+        RemoveItemFromSession(sgrItem.SessionId, sgrItem.Id);
     }
 
     public SGRItemDto Get(Guid Id)
@@ -99,6 +98,34 @@ public class SGRItemService(ISGRItemRepository sgrItemRepository, ISGRSessionRep
         session.TotalPrice = (decimal)(session.TotalItems * 0.5);
         
         sgrSessionRepository.SaveChanges();
+    }
+
+        public void RemoveItemFromSession(Guid sessionId, Guid itemId)
+    {
+        var session = sgrSessionRepository.Get(sessionId);
+        if (session == null)
+        {
+            throw new Exception("Session not found");
+        }
+
+        var sgrItem = sgrItemRepository.Get(itemId);
+
+        if (sgrItem == null)
+        {
+            throw new Exception("Item not found");
+        }
+
+        if (sgrItem.SessionId != session.Id)
+        {
+            throw new Exception("Item not found in session");
+        }
+
+        sgrItemRepository.Delete(sgrItem);
+        session.TotalItems--;
+        session.TotalPrice = (decimal)(session.TotalItems * 0.5);
+
+    sgrSessionRepository.SaveChanges();
+        
     }
     
 }

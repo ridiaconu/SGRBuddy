@@ -12,7 +12,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
     /// <summary>
     /// Create a new SGR session
     /// </summary>
-    [HttpPost]
+    [HttpPost("create")]
     public IActionResult CreateSession()
     {
         try
@@ -29,7 +29,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
     /// <summary>
     /// Get a single SGR session by ID
     /// </summary>
-    [HttpGet("{Id}")]
+    [HttpGet("get-details/{Id}")]
     public IActionResult GetSession(Guid Id)
     {
         try
@@ -50,7 +50,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
      /// <summary>
     /// Get all SGR sessions
     /// </summary>
-    [HttpGet]
+    [HttpGet("get-all")]
     public IActionResult GetAllSessions()
     {
         try
@@ -64,7 +64,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("end-session/{id}")]
     public IActionResult EndSession(Guid id)
     {
         try
@@ -78,6 +78,7 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
         }
     }
 
+/*
     [HttpPost("remove-item")]
     public IActionResult AddToSession([FromBody] Guid sessionId, Guid itemId)
     {
@@ -91,4 +92,5 @@ public class SGRSessionController(SGRSessionService sgrSessionService) : Control
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error adding item to session: {ex.Message}");
         }
     }
+*/
 }
